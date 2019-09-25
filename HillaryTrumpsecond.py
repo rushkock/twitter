@@ -167,10 +167,15 @@ df_dominant_topic.columns = ['Document_No', 'Dominant_Topic', 'Topic_Perc_Contri
 print(df_dominant_topic['Dominant_Topic'][0:10])
 df['dominant_topic'] = df_dominant_topic['Dominant_Topic']
 print(df[['dominant_topic', 'text']][0:10])
+
+topics = [str(topic) for topic in topics]
+topics = [re.sub('(\W*|\d*)','', topic) for topic in topics]
+df["dominant_topic"] = df["dominant_topic"].replace([0,1], topics)
+# GLEN CHECK ME
 # =============================================================================
 # df["dominant_topic"] = df["dominant_topic"].replace([0,1], ["Hillary Clinton", "Donald Trump"])
 # =============================================================================
-df[['dominant_topic', 'text']].to_csv('give_a_file_name.csv')
+df[['dominant_topic', 'text']].to_csv('aug_file.csv')
 
 # =============================================================================
 # df_dominant_topic.to_csv('df_topics3.csv')
