@@ -6,8 +6,8 @@ Created on Wed Sep 25 14:08:31 2019
 @author: hduser
 """
 
-amount_of_topics = 10
-amount_of_words = 3 # try 5 if this has bad results
+amount_of_topics = 8
+amount_of_words = 4 # try 5 if this has bad results
 
 import re
 # -*- coding: utf-8 -*-
@@ -37,7 +37,11 @@ doc_complete = text_list[0:n]
 doc_complete = [re.sub('(#\w*hillary\w*)|(@\w*hillary\w*)|(#\w*Hillary\w*)|(@\w*Hillary\w*)','hillary',text) for text in doc_complete]
 doc_complete = [re.sub('(#\w*trump\w*)|(@\w*trump\w*)|(#\w*Trump\w*)|(@\w*Trump\w*)','trump',text) for text in doc_complete]
 doc_complete = [re.sub('http\s*|(@[A-Za-z0-9]*)|(#[A-Za-z0-9]*)|\//t.co[A-Za-z0-9/]*|\W+[A-Za-z]{1,3}\W+',' ',text) for text in doc_complete]
-      
+doc_complete = [w.replace('trump', '') for w in doc_complete]      
+doc_complete = [w.replace('Trump', '') for w in doc_complete]      
+doc_complete = [w.replace('hillary', '') for w in doc_complete]      
+doc_complete = [w.replace('Hillary', '') for w in doc_complete]      
+
 # =============================================================================
 # doc_complete = [re.sub(',\w{1,3}',' ',text) for text in doc_complete]
 # =============================================================================
@@ -50,15 +54,16 @@ import nltk
 # =============================================================================
 
 def nouns(text):
-    tokens = nltk.word_tokenize(text)
-    tagged = nltk.pos_tag(tokens)
-    nouns = []
-    for i in range(len(tagged)):
-        log = (tagged[i][1][0] == 'N')
-        if log == True:
-          nouns.append(tagged[i][0])  
-    nouns = ' '.join(nouns)
-    return nouns
+#    tokens = nltk.word_tokenize(text)
+#    tagged = nltk.pos_tag(tokens)
+#    nouns = []
+#    for i in range(len(tagged)):
+#        log = (tagged[i][1][0] == 'N')
+#        if log == True:
+#          nouns.append(tagged[i][0])  
+#    nouns = ' '.join(nouns)
+#    return nouns
+    return text
 
 doc_complete = [nouns(text) for text in doc_complete]
     
@@ -168,13 +173,14 @@ df_topic_sents_keywords = format_topics_sentences(ldamodel=ldamodel, corpus=corp
 df_dominant_topic = df_topic_sents_keywords.reset_index()
 df_dominant_topic.columns = ['Document_No', 'Dominant_Topic', 'Topic_Perc_Contrib', 'Keywords', 'Text']
 print(df_dominant_topic['Dominant_Topic'][0:10])
+
 df['dominant_topic'] = df_dominant_topic['Dominant_Topic']
 print(df[['dominant_topic', 'text']][0:10])
 
 topics = [str(topic) for topic in topics]
 topics = [re.sub('(\W*|\d*)','', topic) for topic in topics]
 df["dominant_topic"] = df["dominant_topic"].replace([0,1], topics)
-# GLEN CHECK ME  wtf
+# GLEN CHECK ME  wtf2
  
 
 # =============================================================================
